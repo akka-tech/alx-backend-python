@@ -31,6 +31,7 @@ async def async_fetch_older_users():
         print("\nUsers older than 40:")
         for row in rows:
             print(row)
+        return rows
 
 # Run both queries concurrently
 async def fetch_concurrently():
@@ -39,6 +40,7 @@ async def fetch_concurrently():
         async_fetch_users(),
         async_fetch_older_users()
     )
+    return
 
 # Entry point
 if __name__ == "__main__":
