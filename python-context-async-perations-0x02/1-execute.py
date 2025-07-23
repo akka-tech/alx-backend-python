@@ -13,7 +13,7 @@ class ExecuteQuery:
         self.conn = sqlite3.connect(self.db_name)
         self.cursor = self.conn.cursor()
         print("Connection opened.")
-        self.cursor.execute("SELECT * FROM users WHERE age > ?", (25))
+        self.cursor.execute(self.query, self.params)
         self.result = self.cursor.fetchall()
         return self.result
 
@@ -22,3 +22,6 @@ class ExecuteQuery:
             self.conn.close()
             print("Connection closed.")
 
+with ExecuteQuery('example.db', 'SELECT * FROM users WHERE age > ?', (25,)) as results:
+    for row in results:
+        print(row)
