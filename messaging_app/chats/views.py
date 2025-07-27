@@ -38,3 +38,4 @@ class ConversationViewSet(viewsets.ModelViewSet):
         new_convo.participants.set([current_user, other_user])
         serializer = self.get_serializer(new_convo)
         return Response(serializer.data, status=201)
+    exist 
