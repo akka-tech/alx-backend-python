@@ -1,15 +1,16 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect
 from django.contrib.auth import logout
+from django.shortcuts import render, redirect
 from django.contrib import messages
 
 @login_required
 def delete_user(request):
-    user = request.user
     if request.method == 'POST':
-        user.delete()  # triggers cascade & post_delete signal
-        logout(request)
-        messages.success(request, "Your account and all related data have been deleted.")
-        return redirect('home')  # replace 'home' with your homepage url name
-    # Render confirmation page
+        user = request.user
+        user.delete()          # Deletes user and cascades related data
+        logout(request)        # Logs out the user
+        messages.success(request, "Your account and related data have been deleted.")
+        return redirect('home')  # Change 'home' to your homepage URL name
+
+    # If GET request, show confirmation page
     return render(request, 'messaging/delete_user_confirm.html')
