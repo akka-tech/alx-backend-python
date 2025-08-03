@@ -118,3 +118,27 @@ class Message(models.Model):
 
     def __str__(self):
         return f"{self.sender} ➝ {self.receiver}: {self.content[:30]}"
+
+
+class Message(models.Model):
+    sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)  # <-- NEW
+    parent_message = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE)
+
+    objects = models.Manager()  # Default manager
+    unread = None  # Will override this in step 2
+
+    def __str__(self):
+        return f'Message from {self.sender} to {self.receiver}'
+
+class Message(models.Model):
+    ...
+    unread = UnreadMessagesManager()  # Use this for unread filtering
+
+@login_required
+def inbox_unread(request):
+    unread_messages = Message.unread.for_user(request.user)
+    return render(request, 'messaging/unread_inbox.html', {'unread_messages': unread_messages})
