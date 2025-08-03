@@ -2,7 +2,7 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-
+from django.db import models
 
 def main():
     """Run administrative tasks."""
@@ -20,3 +20,8 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+class UnreadMessagesManager(models.Manager):
+    def unread_for_user(self, user):
+        return self.get_queryset().filter(receiver=user, read=False).only('id', 'sender', 'timestamp', 'content')

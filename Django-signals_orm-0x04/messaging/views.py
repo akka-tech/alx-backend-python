@@ -24,3 +24,11 @@ def threaded_conversations(request):
         .prefetch_related('replies__sender', 'replies__receiver')
 
     threads = build_t_
+
+
+@login_required
+def unread_messages_view(request):
+    unread_messages = Message.unread.unread_for_user(request.user)
+    return render(request, 'messaging/unread.html', {'unread_messages': unread_messages})
+Message.unread.unread_for_user
+Message.only
