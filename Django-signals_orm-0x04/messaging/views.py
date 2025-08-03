@@ -1,5 +1,3 @@
-# messaging/views.py
-
 from django.shortcuts import render
 from .models import Message
 from django.contrib.auth.decorators import login_required
@@ -21,9 +19,8 @@ def build_threaded_messages(messages_queryset):
 
 @login_required
 def threaded_conversations(request):
-    all_messages = Message.objects.filter(receiver=request.user) \
+    all_messages = Message.objects.filter(sender=request.user) \
         .select_related('sender', 'receiver', 'parent_message') \
         .prefetch_related('replies__sender', 'replies__receiver')
 
-    threads = build_threaded_messages(all_messages)
-    return render(request, 'messaging/threaded_view.html', {'threads': threads})
+    threads = build_t_
