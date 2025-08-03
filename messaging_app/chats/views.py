@@ -5,6 +5,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .models import Conversation, Message, User
 from .serializers import ConversationSerializer, MessageSerializer
 from django.shortcuts import get_object_or_404
+from django.views.decorators.cache import cache_page
+from django.shortcuts import render
 
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
@@ -59,3 +61,8 @@ class MessageViewSet(viewsets.ModelViewSet):
             raise PermissionError("Not a participant.")
 
         serializer.save(sender=self.request.user, conversation=conversation)
+
+@cache_page(60)  # Cache for 60 seconds
+def conversation_messages_view(request, conversation_id):
+    messages = Message.objects.filter(conversation_id=conversation_id).order_by('timestamp')
+    return render(request, 'messaging/conversation.html', {'messages': messages})
