@@ -7,10 +7,9 @@ from django.contrib import messages
 def delete_user(request):
     if request.method == 'POST':
         user = request.user
-        user.delete()          # Deletes user and cascades related data
-        logout(request)        # Logs out the user
+        user.delete()         
+        logout(request)        
         messages.success(request, "Your account and related data have been deleted.")
-        return redirect('home')  # Change 'home' to your homepage URL name
+        return redirect('home')  
 
-    # If GET request, show confirmation page
     return render(request, 'messaging/delete_user_confirm.html')
